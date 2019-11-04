@@ -64,6 +64,7 @@
         chunked: true,                            //是否分片
         chunkSize: 1 * 1024 * 1024,              //每个分片的大小，这里为20M
         chunkRetry: 3,                            //某分片若上传失败，重试次数
+        fileNumLimit: 1,
         threads: 1,                               //线程数量，考虑到服务器，这里就选了1
         duplicate: true,                          //分片是否自动去重
         formData: {                               //每次上传分片，一起携带的数据
@@ -71,11 +72,17 @@
         },
       });
 
-      var $list = $("#thelist");
+      // var $list = $("#thelist");
+      uploader.on('beforeFileQueued', function(file){
+        uploader.reset();
+        document.getElementById("time").innerHTML = "";   
+      });
+
       uploader.on('fileQueued', function (file) {
-        $list.append('<div id="' + file.id + '" class="item">' +
+        info = '<div id="' + file.id + '" class="item">' +
           '<h4 class="info">' + file.name + ' is waiting to upload ... </h4>' +
-          '</div>');
+          '</div>'
+        document.getElementById("thelist").innerHTML = info;     
       });
 
       $("#ctlBtn").on('click', function () {
